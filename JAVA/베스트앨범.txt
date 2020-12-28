@@ -1,0 +1,60 @@
+import java.util.*;
+class Solution {
+    public int[] solution(String[] genres, int[] plays) {
+        int[] answer = {};
+        
+        //장르별 재생 횟수 구하기
+        HashMap<String, Integer> hmap1  = new HashMap<>();
+        for(int i=0;i<genres.length;i++){
+            if(hmap1.get(genres[i])==null){
+                hmap1.put(genres[i],plays[i]);
+            }else{
+                hmap1.put(genres[i],hmap1.get(genres[i])+plays[i]);
+            }
+        }
+        
+        ArrayList<Integer> arr1 = new ArrayList<>();
+        ArrayList<String> arr2 = new ArrayList<>(hmap1.keySet());
+        Collections.sort(arr2,(o1,o2)->(hmap1.get(o2).compareTo(hmap1.get(o1)))); //ArrayList를 hmap Value 내림차순 순으로 정렬
+        
+        for(int i=0;i<arr2.size();i++){
+            String TempGenres = arr2.get(i);
+            int firstIdx = 0;
+            int secondIdx = 0;
+            int max = 0;
+            
+            for(int j=0;j<genres.length;j++){
+                if(TempGenres.equals(genres[j])){
+                    if(plays[j]>max){
+                        max=plays[j];
+                        firstIdx=j;
+                    }
+                }
+            }
+            
+            max=-1; //장르가 하나일 수 있으므로 -1
+            
+            for(int j=0; j< genres.length; j++){
+                if(TempGenres.equals(genres[j])){
+                    if(j!=firstIdx && plays[j]>max){
+                        max = plays[j];
+                        secondIdx = j;
+                    }
+                }
+            }
+            
+            arr1.add(firstIdx);
+            if(max !=-1){
+                arr1.add(secondIdx);
+            }
+            
+            
+        }
+        
+        answer = arr1.stream().mapToInt(i->i).toArray();
+        //arr1.stream().mapToInt(Integer::intValue).toArray() 와 같은 의미이다.
+        
+        
+        return answer;
+    }
+}
